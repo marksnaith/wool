@@ -14,6 +14,11 @@ plugins {
 	id 'org.hidetake.ssh' version '2.9.0'
 }
 
+
+repositories {
+	mavenCentral()
+}
+
 group = 'eu.woolplatform'
 version = '1.0.0' // run updateVersion after changing this property
 sourceCompatibility = 1.8
@@ -55,17 +60,17 @@ cargo {
 	deployable {
 		context = cargoTomcatDeployPath
 	}
-	
+
 	remote {
 		hostname = cargoRemoteTomcatHost
 		username = cargoRemoteTomcatUser
 		password = cargoRemoteTomcatPassword
 	}
-	
+
 	local {
 		homeDir = file(cargoLocalTomcatHomeDir)
 		outputFile = file('build/logs/tomcat.log')
-		
+
 		containerProperties {
 			property 'cargo.tomcat.ajp.port', cargoLocalTomcatAjpPort
 		}
@@ -83,7 +88,7 @@ tasks.matching({ it.name =~ /cargo.*Remote/ }).each() {
 task updateConfig {
 	group = 'configuration'
 	description = 'Configures files with current values of woolconfig properties from gradle.properties.'
-	
+
 	doLast() {
 		Properties props = new Properties()
 		def propPrefix = 'woolconfig'
@@ -125,7 +130,7 @@ def listDirFiles(dir, writer) {
 task listDialogueFiles {
 	group = 'configuration'
 	description = 'Lists dialogue files and writes them to dialogues.json'
-	
+
 	doLast() {
 		def dlgDir = file('src/main/resources/dialogues')
 		def dlgFile = file('src/main/resources/dialogues/dialogues.json')
@@ -162,7 +167,7 @@ task updateVersion {
 task checkResources {
 	group = 'build'
 	description = 'Checks if required resource files exist and are up-to-date.'
-	
+
 	dependsOn updateConfig, listDialogueFiles
 }
 
